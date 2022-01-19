@@ -140,13 +140,21 @@ pub unsafe extern "C" fn wasmtime_imported_memory32_size(
 
 
 extern "C" {
+    /// 1
     pub fn control(fn_ptr: *mut u64, arg: u64, vm: *mut u64) -> u64;
+    /// 1
     pub fn restore(k: u64, val: u64, vm: *mut u64);
+    /// 1
     pub fn continuation_copy(k: u64, vm: *mut u64) -> u64;
+    /// 1
     pub fn prompt_begin(vm: *mut u64);
+    /// 1
     pub fn prompt_end(vm: *mut u64);
+    /// 1
     pub fn continuation_delete(k: u64, vm: *mut u64);
 
+    /// 1
     pub fn init_table();
+    /// 1
     pub fn reset_stack_top();
 }

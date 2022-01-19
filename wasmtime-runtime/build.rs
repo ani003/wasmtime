@@ -42,14 +42,14 @@ fn main() {
 
     #[cfg(target_os = "macos")]
     {
-        println!("[MACOS] will copy stuff")
+        println!("[MACOS] will copy stuff");
         // copy continuations.s to machine-dependent place
         Command::new("cp").args(&["src/continuations.s", asm_dep_file]).status().unwrap().success();
         println!("[MACOS] copying src/continuations.s to {}", asm_dep_file)
     }
     #[cfg(target_os = "linux")]
     {
-        println!("[LINUX] will rewrite stuff")
+        println!("[LINUX] will rewrite stuff");
         //sed 's/_control/control/g' src/continuations.s
         let replace_cmd = "s/_control/control/g; s/_restore/restore/g; s/_current_stack_top/current_stack_top/g; s/_current_prompt_depth/current_prompt_depth/g; s/_cont_table/cont_table/g; s/_alloc_cont_id/alloc_cont_id/g; s/_alloc_stack/alloc_stack/g; s/_dealloc_cont_id/dealloc_cont_id/g; s/_dealloc_stack/dealloc_stack/g";
         let out_f = File::create(asm_dep_file).unwrap();
