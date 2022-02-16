@@ -63,12 +63,12 @@ uint64_t free_stack_id_list[STACK_TABLE_SIZE];
 uint64_t free_stack_id_list_top = 0; // From this index we will alloc the next stack id
 
 void reset_stack_top() {
-    // printf("Reseting stack top\n");
+    printf("Reseting stack top\n");
     current_stack_top = 0;
 }
 
 void init_table(void) {
-    // printf("Starting init table\n");
+    printf("Starting init table\n");
 
     reset_stack_top();
 
@@ -81,20 +81,20 @@ void init_table(void) {
         
         free_cont_id_list[i] = (uint64_t)i;
     }
-    // printf("(1)\n");
+    printf("(1)\n");
 
     free_cont_id_list_top = 0;
 
-    // printf("mallocing %d bytes\n", STACK_SIZE * STACK_TABLE_SIZE);
+    printf("mallocing %d bytes\n", STACK_SIZE * STACK_TABLE_SIZE);
     stacks_area = (char *)malloc16(STACK_SIZE * STACK_TABLE_SIZE);
 
-    // printf("%llu\n", (uint64_t)stacks_area);
+    printf("%llu\n", (uint64_t)stacks_area);
 
-    // printf("(2)\n");
+    printf("(2)\n");
     for (int i = 0; i < STACK_TABLE_SIZE; i++) {        
         free_stack_id_list[i] = (uint64_t)i;
     }
-    // printf("(3)\n");
+    printf("(3)\n");
 
     alloc_list_stack[0] = NULL;
 }
@@ -102,11 +102,11 @@ void init_table(void) {
 
 uint64_t alloc_cont_id() {
     if(free_cont_id_list_top == CONT_TABLE_SIZE) {
-        // printf("Error: out of continuations to allocate.\n");
+        printf("Error: out of continuations to allocate.\n");
         abort();
     } else {
         uint64_t id = free_cont_id_list[free_cont_id_list_top++];
-        // printf("alloc cont: %llu\n", id);
+        printf("alloc cont: %llu\n", id);
         return id;
     }
 }
@@ -119,20 +119,21 @@ void register_cont_id_in_prompt_depth(uint64_t kid, uint64_t prompt_depth) {
 }
 
 void dealloc_cont_id(uint64_t id) {
-    // printf("dealloc cont: %llu\n", id);
+    printf("dealloc cont: %llu\n", id);
     free_cont_id_list[--free_cont_id_list_top] = id;
 }
 
 
 uint64_t alloc_stack() {
+    abort();
     if(free_stack_id_list_top == STACK_TABLE_SIZE) {
-        // printf("Error: out of stacks to allocate.\n");
+        printf("Error: out of stacks to allocate.\n");
         abort();
     } else {
         uint64_t id = free_stack_id_list[free_stack_id_list_top++];
         uint64_t stack_base = (uint64_t)((void *)stacks_area) + STACK_SIZE * id;
         uint64_t stack_top = (stack_base + STACK_SIZE) - 16;
-        // printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
+        printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
         return stack_top;
     }
 
@@ -147,7 +148,7 @@ uint64_t alloc_stack() {
 void dealloc_stack(void *sp) {
     uint64_t id = ((uint64_t)sp - (uint64_t)((void *)stacks_area)) / STACK_SIZE;
 
-    // printf("dealloc stack: id: %llu, rsp: %p\n", id, (uint64_t)sp);
+    printf("dealloc stack: id: %llu, rsp: %p\n", id, (uint64_t)sp);
 
     free_stack_id_list[--free_stack_id_list_top] = id;
 }

@@ -972,6 +972,8 @@ impl<'module_environment> cranelift_wasm::FuncEnvironment for FuncEnvironment<'m
         mem_index: MemoryIndex,
     ) -> WasmResult<ir::Inst> {
 
+        println!("In translate control");
+
         let pointer_type = self.pointer_type();
 
         let callee_addr = pos.ins().func_addr(pointer_type, callee);
@@ -994,6 +996,9 @@ impl<'module_environment> cranelift_wasm::FuncEnvironment for FuncEnvironment<'m
         arg: ir::Value,
         mem_index: MemoryIndex,
     ) -> WasmResult<ir::Inst> {
+
+        println!("In translate restore");
+
         let (func_sig, index_arg, func_idx) = self.get_restore_func(&mut pos.func, mem_index);
 
         // let memory_index = pos.ins().iconst(I32, index_arg as i64);
