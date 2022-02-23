@@ -29,11 +29,9 @@
 
 
 
-    (func $the_main (export "the_main") (result i64)
+    (func $main (export "main")
         (control $handler (i64.const 1337))
         drop
-        
-        (global.get $x)
     )
 
 )
