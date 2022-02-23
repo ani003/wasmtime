@@ -471,8 +471,10 @@ impl Instance {
     /// Invoke the WebAssembly start function of the instance, if one is present.
     fn invoke_start_function(&mut self) -> Result<(), InstantiationError> {
         if let Some(start_index) = self.module.start_func {
+            println!("BRANCH 1");
             self.invoke_function(start_index)
         } else if let Some(start_export) = self.module.exports.get("_start") {
+            println!("BRANCH 2");
             // As a compatibility measure, if the module doesn't have a start
             // function but does have a _start function exported, call that.
             match *start_export {
@@ -488,6 +490,7 @@ impl Instance {
                 _ => Ok(()),
             }
         } else if let Some(main_export) = self.module.exports.get("main") {
+            println!("BRANCH 3");
             // As a further compatibility measure, if the module doesn't have a
             // start function or a _start function exported, but does have a main
             // function exported, call that.
@@ -504,6 +507,7 @@ impl Instance {
                 _ => Ok(()),
             }
         } else {
+            println!("BRANCH 4");
             Ok(())
         }
     }
@@ -788,7 +792,9 @@ impl InstanceHandle {
         check_memory_init_bounds(instance, data_initializers)?;
 
         // Apply the initializers.
+        println!("START - INIT");
         initialize_tables(instance)?;
+        println!("END - INIT");
         initialize_memories(instance, data_initializers)?;
         initialize_globals(instance);
 
@@ -820,7 +826,9 @@ impl InstanceHandle {
 
         // The WebAssembly spec specifies that the start function is
         // invoked automatically at instantiation time.
+        println!("START FUNCTION");
         instance.invoke_start_function()?;
+        println!("START FUNCTION");
 
         Ok(Self { instance })
     }

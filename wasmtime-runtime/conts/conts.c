@@ -28,9 +28,9 @@ typedef struct uthread_ctx_t {
 
 } uthread_ctx_t;
 
-#define CONT_TABLE_SIZE 100001
+#define CONT_TABLE_SIZE 100
 #define STACK_SIZE 1048576ll // 1024, 2^23, 8388608, 1048576
-#define STACK_TABLE_SIZE 100001ll
+#define STACK_TABLE_SIZE 100ll
 #define MAX_PROMPT_DEPTH 1024
 
 extern uthread_ctx_t *cont_table[CONT_TABLE_SIZE];
@@ -125,7 +125,6 @@ void dealloc_cont_id(uint64_t id) {
 
 
 uint64_t alloc_stack() {
-    abort();
     if(free_stack_id_list_top == STACK_TABLE_SIZE) {
         printf("Error: out of stacks to allocate.\n");
         abort();

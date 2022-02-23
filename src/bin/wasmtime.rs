@@ -382,8 +382,9 @@ fn instantiate_module(
         })
         .collect::<Result<Vec<_>, _>>()?;
 
-
+    println!("START");
     let instance = HostRef::new(Instance::new(store.clone(), module.clone(), &imports)?);
+    println!("END");
 
     Ok((instance, module, data))
 }

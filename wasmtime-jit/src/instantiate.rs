@@ -78,11 +78,13 @@ impl<'data> RawCompiledModule<'data> {
             None
         };
 
+        println!("START - TRANSLATE");
         let (allocated_functions, jt_offsets, relocations, dbg_image) = compiler.compile(
             &translation.module,
             translation.function_body_inputs,
             debug_data,
         )?;
+        println!("END - TRANSLATE");
 
         let imports = link_module(
             &translation.module,
@@ -254,9 +256,10 @@ pub fn instantiate(
     global_exports: Rc<RefCell<HashMap<String, Option<Export>>>>,
     debug_info: bool,
 ) -> Result<InstanceHandle, SetupError> {
+    println!("PART1");
     let raw = RawCompiledModule::new(compiler, data, resolver, debug_info)?;
 
-
+    println!("PART2");
     InstanceHandle::new(
         Rc::new(raw.module),
         global_exports,

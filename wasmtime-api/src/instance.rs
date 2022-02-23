@@ -39,6 +39,7 @@ pub fn instantiate_in_context(
     let debug_info = context.debug_info();
     let mut resolver = SimpleResolver { imports };
 
+    println!("START3");
     let instance = instantiate(
         &mut context.compiler(),
         data,
@@ -46,6 +47,7 @@ pub fn instantiate_in_context(
         exports,
         debug_info,
     )?;
+    println!("END3");
 
     contexts.insert(context);
     Ok((instance, contexts))
@@ -78,10 +80,10 @@ impl Instance {
             .map(|(i, e)| (i.module().to_string(), i.name().to_string(), e.clone()))
             .collect::<Vec<_>>();
 
-        
+        println!("START2");
         let (mut instance_handle, contexts) =
             instantiate_in_context(module.borrow().binary(), imports, context, exports)?;
-
+        println!("END2");
 
         let exports = {
             let module = module.borrow();
@@ -97,7 +99,6 @@ impl Instance {
             }
             exports.into_boxed_slice()
         };
-
 
         Ok(Instance {
             instance_handle,

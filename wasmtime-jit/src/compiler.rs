@@ -115,6 +115,7 @@ impl Compiler {
         ),
         SetupError,
     > {
+        println!("TRANSLATE 2");
         let (compilation, relocations, address_transform, value_ranges, stack_slots, traps) =
             match self.strategy {
                 // For now, interpret `Auto` as `Cranelift` since that's the most stable
@@ -138,6 +139,7 @@ impl Compiler {
                 }
             }
             .map_err(SetupError::Compile)?;
+        println!("TRANSLATE 2");
 
         let allocated_functions =
             allocate_functions(&mut self.code_memory, &compilation).map_err(|message| {
