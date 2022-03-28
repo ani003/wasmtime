@@ -133,6 +133,7 @@ pub unsafe extern "C" fn wasmtime_call(
     vmctx: *mut VMContext,
     callee: *const VMFunctionBody,
 ) -> Result<(), String> {
+    println!("Wasmtime Call");
     if WasmtimeCall(vmctx as *mut u8, callee) == 0 {
         Err(trap_message())
     } else {

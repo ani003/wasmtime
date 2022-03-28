@@ -447,9 +447,10 @@ impl Instance {
 
     fn invoke_function(&mut self, index: FuncIndex) -> Result<(), InstantiationError> {
         // TODO: Check that the callee's calling convention matches what we expect.
-
+        println!("START INVOKE FUNCTION");
         let (callee_address, callee_vmctx) = match self.module.defined_func_index(index) {
             Some(defined_index) => {
+                println!("SOME INDEX");
                 let body = *self
                     .finished_functions
                     .get(defined_index)
@@ -457,6 +458,7 @@ impl Instance {
                 (body, self.vmctx_mut() as *mut VMContext)
             }
             None => {
+                println!("NONE INDEX");
                 assert!(index.index() < self.module.imported_funcs.len());
                 let import = self.imported_function(index);
                 (import.body, import.vmctx)
@@ -828,7 +830,7 @@ impl InstanceHandle {
         // invoked automatically at instantiation time.
         println!("START FUNCTION");
         instance.invoke_start_function()?;
-        println!("START FUNCTION");
+        println!("END FUNCTION");
 
         Ok(Self { instance })
     }
@@ -1184,6 +1186,7 @@ fn get_table_slice<'instance>(
 
 /// Initialize the table memory from the provided initializers.
 fn initialize_tables(instance: &mut Instance) -> Result<(), InstantiationError> {
+    println!("INIT TABLES START");
     let vmctx: *mut VMContext = instance.vmctx_mut();
     let module = Rc::clone(&instance.module);
     for init in &module.table_elements {
@@ -1218,6 +1221,8 @@ fn initialize_tables(instance: &mut Instance) -> Result<(), InstantiationError> 
 
     // sketchy hack
     unsafe { crate::libcalls::init_table(); }
+
+    println!("INIT TABLES END");
 
     Ok(())
 }

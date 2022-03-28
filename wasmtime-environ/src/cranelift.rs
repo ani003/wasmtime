@@ -247,7 +247,7 @@ impl crate::compilation::Compiler for Cranelift {
 
                         let mod_translation_state = ModuleTranslationState::new();
 
-                        println!("TRANSLATOR 3");
+                        println!("TRANSLATOR 3 START");
                         let mut trans = FuncTranslator::new();
                         trans
                             .translate(
@@ -258,7 +258,7 @@ impl crate::compilation::Compiler for Cranelift {
                                 &mut FuncEnvironment::new(isa.frontend_config(), module),
                             )
                             .map_err(CompileError::Wasm)?;
-                        println!("TRANSLATOR 3");
+                        println!("TRANSLATOR 3 END");
 
                         let mut code_buf: Vec<u8> = Vec::new();
                         let mut reloc_sink = RelocSink::new(func_index);
