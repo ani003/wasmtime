@@ -51,14 +51,14 @@ uint64_t current_stack_top_saved[MAX_PROMPT_DEPTH];
 
 
 
-/*
+
 // from: https://stackoverflow.com/questions/227897/how-to-allocate-aligned-memory-only-using-the-standard-library
 void *malloc16(uint64_t size) {
     void *mem = malloc(size+15);
     void *ptr = (void *)(((uint64_t)mem+15) & ~ (uint64_t)0x0F);
     return ptr;
 }
-*/
+
 
 char *stacks_area = NULL;
 
@@ -133,7 +133,8 @@ uint64_t alloc_stack() {
         abort();
     } else {
         uint64_t id = free_stack_id_list[free_stack_id_list_top++];
-        uint64_t stack_base = (uint64_t)((void *)stacks_area) + STACK_SIZE * id;
+        // uint64_t stack_base = (uint64_t)((void *)stacks_area) + STACK_SIZE * id;
+        uint64_t stack_base = (uint64_t)((void *)malloc16(STACK_SIZE));
         uint64_t stack_top = (stack_base + STACK_SIZE) - 16;
         printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
         return stack_top;
