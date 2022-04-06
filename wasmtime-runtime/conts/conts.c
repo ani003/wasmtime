@@ -28,9 +28,11 @@ typedef struct uthread_ctx_t {
 
 } uthread_ctx_t;
 
-#define CONT_TABLE_SIZE 100001
+// #define CONT_TABLE_SIZE 100001
+#define CONT_TABLE_SIZE 1001
 #define STACK_SIZE 1048576ll // 1024, 2^23, 8388608, 1048576
-#define STACK_TABLE_SIZE 100001ll
+// #define STACK_TABLE_SIZE 100001ll
+#define STACK_TABLE_SIZE 1001ll
 #define MAX_PROMPT_DEPTH 1024
 
 extern uthread_ctx_t *cont_table[CONT_TABLE_SIZE];
@@ -49,13 +51,14 @@ uint64_t current_stack_top_saved[MAX_PROMPT_DEPTH];
 
 
 
-
+/*
 // from: https://stackoverflow.com/questions/227897/how-to-allocate-aligned-memory-only-using-the-standard-library
 void *malloc16(uint64_t size) {
     void *mem = malloc(size+15);
     void *ptr = (void *)(((uint64_t)mem+15) & ~ (uint64_t)0x0F);
     return ptr;
 }
+*/
 
 char *stacks_area = NULL;
 
@@ -86,7 +89,7 @@ void init_table(void) {
     free_cont_id_list_top = 0;
 
     // printf("mallocing %d bytes\n", STACK_SIZE * STACK_TABLE_SIZE);
-    stacks_area = (char *)malloc16(STACK_SIZE * STACK_TABLE_SIZE);
+    // stacks_area = (char *)malloc16(STACK_SIZE * STACK_TABLE_SIZE);
 
     // printf("%llu\n", (uint64_t)stacks_area);
 
@@ -132,7 +135,7 @@ uint64_t alloc_stack() {
         uint64_t id = free_stack_id_list[free_stack_id_list_top++];
         uint64_t stack_base = (uint64_t)((void *)stacks_area) + STACK_SIZE * id;
         uint64_t stack_top = (stack_base + STACK_SIZE) - 16;
-        // printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
+        printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
         return stack_top;
     }
 
