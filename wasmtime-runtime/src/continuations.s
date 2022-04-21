@@ -207,6 +207,9 @@ _restore:
     call _dealloc_cont_id
 
     // ********* Free the current stack ***********
+    // Send the current stack top as second argument to be freed by dealloc
+    movq _current_stack_top@GOTPCREL(%rip), %rdi
+    movq (%rdi), %rsi
     movq %rsp, %rdi
     callq _dealloc_stack
 

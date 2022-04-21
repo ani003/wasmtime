@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include <malloc.h>
+
 typedef struct uthread_ctx_t {
     uint64_t table[12];
     
@@ -132,11 +134,18 @@ uint64_t alloc_stack() {
         // printf("Error: out of stacks to allocate.\n");
         abort();
     } else {
+        printf("\n\n======================== BEFORE ALLOCATION ===============================\n");
+        malloc_stats();
+
         uint64_t id = free_stack_id_list[free_stack_id_list_top++];
         // uint64_t stack_base = (uint64_t)((void *)stacks_area) + STACK_SIZE * id;
         uint64_t stack_base = (uint64_t)((void *)malloc16(STACK_SIZE));
         uint64_t stack_top = (stack_base + STACK_SIZE) - 16;
-        printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
+        // printf("alloc stack: id: %llu, base: %p, top: %p\n", id, stack_base, stack_top);
+
+        printf("\n\n======================== AFTER ALLOCATION ================================\n");
+        malloc_stats();
+
         return stack_top;
     }
 
@@ -148,8 +157,13 @@ uint64_t alloc_stack() {
 }
 
 // Note that sp is anywhere in the stack, not necessarily the base pointer or top of stack pointer.
-void dealloc_stack(void *sp) {
+void dealloc_stack(void *sp, void* stack_top_ptr) {
     uint64_t id = ((uint64_t)sp - (uint64_t)((void *)stacks_area)) / STACK_SIZE;
+
+    uint64_t stack_top = (uint64_t) stack_top_ptr;
+    uint64_t stack_base = stack_top + 16 - STACK_SIZE;
+    void *base_ptr = (void *)stack_base;
+    free(base_ptr);
 
     // printf("dealloc stack: id: %llu, rsp: %p\n", id, (uint64_t)sp);
 
@@ -235,6 +249,6 @@ void prompt_end(void *vmctx) {
 
 void continuation_delete(uint64_t kid, void *vmctx) {
     cont_table[kid]->table[10] = 0; // Mark the continuation as consumed.
-    dealloc_stack((void *)(cont_table[kid]->table[0]));
+    dealloc_stack((void *)(cont_table[kid]->table[0]), (void *)(cont_table[kid]->table[0]));
     dealloc_cont_id(kid);
 }
